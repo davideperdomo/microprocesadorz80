@@ -68,40 +68,6 @@ ALU
 """
 from __future__ import print_function
 from bitarray import bitarray
-bit8 = bitarray(8)
-bit16 = bitarray(16)
-bit8.setall(False)
-bit16.setall(False)
-
-PINES = {
-  'MREQ': [False],
-  'IORQ': [False],
-  'RD': [False],
-  'WR': [False],
-  'RFSH': [False],
-  'INT': [False],
-  'WAIT': [False],
-  'RESET': [False],
-  'BUSRQ': [False],
-  'addresbus' : bit16,
-  'databus': bit8
-}
-
-REGISTROS = {
-  'A':bit8,
-  'B':bit8,
-  'C':bit8,
-  'D':bit8,
-  'E':bit8,
-  'F':bit8,
-  'PC':bit16,
-  'SP':bit16,
-  'IX':bit16,
-  'IY':bit16
-}
-
-def exchange(reg1,reg2):
-  REGISTROS[reg2]=REGISTROS.get(reg1)
 
 class Alu:
   
@@ -149,6 +115,39 @@ class Procesor:
         else:
           print ('0', end='')
       print (" ")
+
+bit8 = bitarray(8)
+bit16 = bitarray(16)
+bit8.setall(False)
+bit16.setall(False)
+
+PINES = {
+  'MREQ': [False],
+  'IORQ': [False],
+  'RD': [False],
+  'WR': [False],
+  'RFSH': [False],
+  'INT': [False],
+  'WAIT': [False],
+  'RESET': [False],
+  'BUSRQ': [False],
+  'addresbus' : bit16,
+  'databus': bit8
+}
+
+REGISTROS = {
+  'A':bit8,
+  'B':bit8,
+  'C':bit8,
+  'D':bit8,
+  'E':bit8,
+  'F':bit8,
+  'PC':bit16,
+  'SP':bit16,
+  'IX':bit16,
+  'IY':bit16
+}
+
 
 z80 = Procesor(REGISTROS, PINES)
 print("Input data bus (8 bits)")
