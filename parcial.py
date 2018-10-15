@@ -82,14 +82,27 @@ class Alu:
       carry = (op1[i] + op2[i] + carry) / 2 
     return carry,result
     
-  #def resta(self, reg1, reg2):
+  def resta(self, op1, op2):
+    borrow, addit = self.suma(op1,self.complemento1(op2))
+    if borrow:
+      carrbit = bitarray('00000001')
+      carry, result = self.suma(addit,carrbit)
+    else:
+      result = self.complemento1(addit)
+    return borrow,result
   #def AND(self,eg1,reg2):
   #def OR(self,reg1,reg2):
   #def XOR(self,reg1,reg2):
   #def complemento(self,reg):
   #def desplazamiento(self,reg1,reg2):
   #def registro(self,reg):
-    
+  
+  def complemento1(self,bits):
+    result = bitarray(8)
+    for i in range(0,8):
+      result[i]= not bits[i]
+    return result
+  
 class Procesor:
   
   def __init__(self, registros, pines, banderas):
@@ -100,11 +113,21 @@ class Procesor:
 
   #to test
   def suma(self, reg1, reg2):
+    # ADD A,B
     operator1 = self.registros.get(reg1)
     operator2 = self.registros.get(reg2)
     carry, result = self.alu.suma(operator1,operator2)
     self.banderas['CARRY']=carry
     self.registros.update({'F': result})
+  
+  def res(self, reg1, reg2):
+    # SUB A,B
+    operator1 = self.registros.get(reg1)
+    operator2 = self.registros.get(reg2)
+    carry, result = self.alu.resta(operator1,operator2)
+    self.banderas['CARRY']=carry
+    self.registros.update({'F': result})
+  
     
   def transfer(self,reg1,reg2):
     #LD A,B
@@ -187,7 +210,10 @@ BANDERAS = {
 
 MEMORY = [bit8]*65536
 z80 = Procesor(REGISTROS, PINES, BANDERAS)
-#Bug first bit 1
+
+test = bitarray('0001010')
+print(test)
+#Bug first bit has to be 1
 print("Input data bus (8 bits)")
 databusin = input()
 z80.inputdatabus(bitarray(str(databusin)))
@@ -198,6 +224,7 @@ databusinp = input()
 z80.inputdatabus(bitarray(str(databusinp)))
 z80.inop('B')
 z80.suma('A','B')
+z80.res('A','B')
 
 z80.printpines()
 z80.printregisters()
