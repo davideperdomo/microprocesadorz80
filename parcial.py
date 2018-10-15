@@ -132,7 +132,6 @@ class Procesor:
     self.memory = memory
     self.alu = Alu()
 
-  #to test
   def suma(self, reg1, reg2):
     # ADD A,B
     operator1 = self.registros.get(reg1)
@@ -149,7 +148,42 @@ class Procesor:
     self.banderas['CARRY']=carry
     self.registros.update({'F': result})
   
-    
+  def compl(self):
+    #CPL
+    operator= self.registros.get('A')
+    result = self.alu.complemento1(operator)
+    self.registros['A'] = result
+  
+  def compl2(self):
+    #NEG
+    operator= self.registros.get('A')
+    result = self.alu.complemento2(operator)
+    self.registros['A'] = result
+  
+  def AND(self, reg):
+    #AND B
+    operator1 = self.registros.get('A')
+    operator2 = self.registros.get(reg)
+    operator= self.registros.get('A')
+    result = self.alu.AND(operator1,operator2)
+    self.registros['F'] = result
+
+  def OR(self, reg):
+    #OR B
+    operator1 = self.registros.get('A')
+    operator2 = self.registros.get(reg)
+    operator= self.registros.get('A')
+    result = self.alu.OR(operator1,operator2)
+    self.registros['F'] = result
+
+  def XOR(self, reg):
+    #XOR B
+    operator1 = self.registros.get('A')
+    operator2 = self.registros.get(reg)
+    operator= self.registros.get('A')
+    result = self.alu.XOR(operator1,operator2)
+    self.registros['F'] = result
+
   def transfer(self,reg1,reg2):
     #LD A,B
     if reg1 in REGISTROS:
@@ -233,16 +267,13 @@ MEMORY = [bit8]*65536
 
 z80 = Procesor(REGISTROS, PINES, BANDERAS, MEMORY)
 
-test = bitarray('0001010')
-print(test)
-#Bug first bit has to be 1
 print("Input data bus (8 bits)")
-databusin = input()
+databusin = raw_input()
 z80.inputdatabus(bitarray(str(databusin)))
 z80.inop('A')
 
 print("Input data bus (8 bits)")
-databusinp = input()
+databusinp = raw_input()
 z80.inputdatabus(bitarray(str(databusinp)))
 z80.inop('B')
 z80.suma('A','B')
