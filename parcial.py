@@ -85,15 +85,35 @@ class Alu:
   def resta(self, op1, op2):
     borrow, addit = self.suma(op1,self.complemento1(op2))
     if borrow:
-      carrbit = bitarray('00000001')
-      carry, result = self.suma(addit,carrbit)
+      bitone = bitarray('00000001')
+      carry, result = self.suma(addit,bitone)
     else:
       result = self.complemento1(addit)
     return borrow,result
-  #def AND(self,eg1,reg2):
-  #def OR(self,reg1,reg2):
-  #def XOR(self,reg1,reg2):
-  #def complemento(self,reg):
+    
+  def AND(self,op1,op2):
+    result = bitarray(8)
+    for i in range(7,-1,-1):
+      result[i] = (op1[i] and op2[i])
+    return result
+    
+  def OR(self,op1,op2):
+    result = bitarray(8)
+    for i in range(7,-1,-1):
+      result[i] = (op1[i] or op2[i])
+    return result
+    
+  def XOR(self,op1,op2):
+    result = bitarray(8)
+    for i in range(7,-1,-1):
+      result[i] = (op1[i] != op2[i])
+    return result
+  
+  def complemento2(self,op):
+    bitone = bitarray('00000001')
+    carry,result = self.suma(self.complemento1(op),bitone)
+    return result
+    
   #def desplazamiento(self,reg1,reg2):
   #def registro(self,reg):
   
