@@ -125,10 +125,11 @@ class Alu:
   
 class Procesor:
   
-  def __init__(self, registros, pines, banderas):
+  def __init__(self, registros, pines, banderas, memory):
     self.pines = pines
     self.registros = registros
     self.banderas = banderas
+    self.memory = memory
     self.alu = Alu()
 
   #to test
@@ -229,7 +230,8 @@ BANDERAS = {
 }
 
 MEMORY = [bit8]*65536
-z80 = Procesor(REGISTROS, PINES, BANDERAS)
+
+z80 = Procesor(REGISTROS, PINES, BANDERAS, MEMORY)
 
 test = bitarray('0001010')
 print(test)
