@@ -72,9 +72,16 @@ from bitarray import bitarray
 class Alu:
   
   def __init__(self):
-    self.alu = 'alu z80'
+    self.name = 'alu z80'
     
-  #def suma(self, reg1, reg2):
+  def suma(self, op1, op2):
+    carry = False
+    result = bitarray(8)
+    for i in range(7,-1,-1):
+      result[i] = (op1[i] != op2[i]) != carry
+      carry = (op1[i] + op2[i] + carry) / 2 
+    return carry,result
+    
   #def resta(self, reg1, reg2):
   #def AND(self,eg1,reg2):
   #def OR(self,reg1,reg2):
@@ -85,17 +92,37 @@ class Alu:
     
 class Procesor:
   
-  def __init__(self, registros, pines):
+  def __init__(self, registros, pines, banderas):
     self.pines = pines
     self.registros = registros
+    self.banderas = banderas
     self.alu = Alu()
 
-  def swap(self,reg1,reg2):
-    REGISTROS[reg2]=REGISTROS.get(reg1)
-  
+  #to test
+  def suma(self, reg1, reg2):
+    operator1 = self.registros.get(reg1)
+    operator2 = self.registros.get(reg2)
+    carry, result = self.alu.suma(operator1,operator2)
+    self.banderas['CARRY']=carry
+    self.registros.update({'F': result})
+    
+  def transfer(self,reg1,reg2):
+    #LD A,B
+    if reg1 in REGISTROS:
+      self.registros[reg2]=self.registros.get(reg1)
+    #LD B,32H |00110010
+    elif len(reg1) == 8 :
+      self.registros[reg2] = reg1
+    #LD A,(2080H) |10000010000000
+    else :
+      self.registros[reg2] = MEMORY[int(reg1, 2)]
+    
   def inputdatabus(self,indatabus):
     self.pines['databus'] = indatabus
 
+  def inop(self,reg1):
+    self.registros[reg1] = self.pines['databus']
+    
   def printregisters(self):
     for key in self.registros:
       print (key,end=': ')
@@ -115,6 +142,10 @@ class Procesor:
         else:
           print ('0', end='')
       print (" ")
+
+  def printbanderas(self):
+    for key in self.banderas:
+      print (key," ",self.banderas.get(key))
 
 bit8 = bitarray(8)
 bit16 = bitarray(16)
@@ -148,10 +179,26 @@ REGISTROS = {
   'IY':bit16
 }
 
+BANDERAS = {
+  'SIGN':False,
+  'ZERO':False,
+  'CARRY':False
+}
 
-z80 = Procesor(REGISTROS, PINES)
+MEMORY = [bit8]*65536
+z80 = Procesor(REGISTROS, PINES, BANDERAS)
+#Bug first bit 1
 print("Input data bus (8 bits)")
 databusin = input()
 z80.inputdatabus(bitarray(str(databusin)))
+z80.inop('A')
+
+print("Input data bus (8 bits)")
+databusinp = input()
+z80.inputdatabus(bitarray(str(databusinp)))
+z80.inop('B')
+z80.suma('A','B')
+
 z80.printpines()
 z80.printregisters()
+z80.printbanderas()
