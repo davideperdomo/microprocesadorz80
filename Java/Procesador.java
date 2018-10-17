@@ -157,7 +157,7 @@ class Procesador {
 
   public void complemento1() {
     this.registros_8bit[A] = ALU.complemento1(this.registros_8bit[A]);
-    this.asignarCero(0x00FF & this.registros_8bit[A]);
+    this.asignarCero((short)(0x00FF & this.registros_8bit[A]));
   }
 
   public void complemento2() {

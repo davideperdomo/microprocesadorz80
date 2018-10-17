@@ -1,9 +1,10 @@
-class main {
-  public static void main(String[] args) {
-    Procesador p = new Procesador();
+import java.io.IOException;
 
-    System.out.println(p.registros_8bit[0]);
-    p.incrementar();
-    System.out.println(p.registros_8bit[0]);
+public class main {
+ 
+  public static void main(String[] args)  throws IOException {
+    Procesador z80 = new Procesador();
+    Ensamblador e = new Ensamblador();
+    e.ensamblar("program.txt", z80);
   }
 }
