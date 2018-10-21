@@ -7,22 +7,33 @@ import java.util.*;
 
 class Ensamblador {
   ArrayList<String> n_registros;
-  
+  private byte[] programa;
+  private int tamano;
+  private final int BITS = 16;
+
   public Ensamblador(){
+    this.tamano = Math.pow(2, BITS);
+    this.byte = new byte[this.tamano];
     String registros[]={"A", "B", "C", "D", "E", "H", "L"};
     this.n_registros=new ArrayList<String>(Arrays.asList(registros));
   }
-  
+
   private int getidx(String nombre){
     return this.n_registros.indexOf(nombre);
   }
-  
-  public void ensamblar(String archivo, Procesador p) throws FileNotFoundException, IOException {
-    String cadena;
+
+  public void ensamblar(String archivo) throws FileNotFoundException, IOException {
+
+    String cadena = null;
     FileReader f = new FileReader(archivo);
     BufferedReader b = new BufferedReader(f);
-    while((cadena = b.readLine())!=null) {
-        String[] line = cadena.split(" ");
+    String[] line = null;
+    String[] operandos = null;
+
+    while((cadena = b.readLine()) != null) {
+
+        line = cadena.split(" ");
+
         switch (line[1]) {
           case "ORG":
             //Localidad en memoria de inicio de programa
@@ -34,7 +45,7 @@ class Ensamblador {
             //Transferencia de bits
             String[] operandos = line[2].split(",");
             if(n_registros.contains(operandos[1])){
-              p.registros_8bit[this.getidx(operandos[0])] = p.registros_8bit[this.getidx(operandos[1])]; 
+              p.registros_8bit[this.getidx(operandos[0])] = p.registros_8bit[this.getidx(operandos[1])];
             }else{
               byte[] aByte =	DatatypeConverter.parseHexBinary(operandos[1].split("H")[0]);
               p.registros_8bit[this.getidx(operandos[0])] = aByte[0];
@@ -42,9 +53,14 @@ class Ensamblador {
             break;
           case "ADD":
             //Suma
-            String[] sumandos = line[2].split(",");
-            p.suma(p.registros_8bit[this.n_registros.indexOf(sumandos[1])]);
-            break;
+            operandos = line[2].split(",");
+
+            // Verificar si es registro o mem
+
+
+            // String[] sumandos = line[2].split(",");
+            // p.suma(p.registros_8bit[this.getidx(sumandos[1])]);
+            // break;
           case "OUT":
             //Mostrar acumulador por puerto definido
             System.out.println(p.registros_8bit[0] & 0xFF);
