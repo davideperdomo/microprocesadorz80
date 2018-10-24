@@ -1,0 +1,6 @@
+ ORG 1800H
+ IN  A,(01H)
+ OUT (07H),A
+ LD (2060H),A
+ HALT
+ END

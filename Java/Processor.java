@@ -53,6 +53,7 @@ public class Processor {
   }
 
   public void fetch() {
+    System.out.println("~ fetching in memory location " + this.reg_16bit[PC]);
     int[] instruction = new int[5];
     instruction[0] = this.mem[this.reg_16bit[PC]];
     instruction[1] = this.mem[this.reg_16bit[PC]+1];
@@ -82,39 +83,42 @@ public class Processor {
       break;
       // add (with reg 8 bits) accum->op1
       case 0:
-        System.out.println("suma");
+        System.out.println("suma acumulador + registro " + this.reg_8bit[this.ir.op2]);
         res = ALU.add(this.reg_8bit[A], this.reg_8bit[this.ir.op2]);
         this.reg_8bit[A] = 0x00_00_00_ff & res;
       break;
 
       // add (with num 8 bits) accum
       case 1:
-        System.out.println("suma");
+        System.out.println("suma acumulador + " + this.ir.op2);
         res = ALU.add(this.reg_8bit[A], this.ir.op2);
         this.reg_8bit[A] = 0x00_00_00_ff & res;
       break;
 
       // add (with mem 8 bits) accum
       case 2:
-        System.out.println("suma");
+        System.out.println("suma acumulador + localidad " + this.mem[this.ir.op2]);
         res = ALU.add(this.reg_8bit[A], this.mem[this.ir.op2]);
         this.reg_8bit[A] = 0x00_00_00_ff & res;
       break;
 
       // sub (with reg 8 bits) accum
       case 3:
+        System.out.println("resta acumulador + " + this.reg_8bit[this.ir.op2]);
         res = ALU.sub(this.reg_8bit[A], this.reg_8bit[this.ir.op2]);
         this.reg_8bit[A] = 0x00_00_00_ff & res;
       break;
 
       // sub (with num 8 bits) accum
       case 4:
+        System.out.println("resta A" + this.ir.op2);
         res = ALU.sub(this.reg_8bit[A], this.ir.op2);
         this.reg_8bit[A] = 0x00_00_00_ff & res;
       break;
 
       // sub (with mem 8 bits) accum
       case 5:
+        System.out.println("resta A" + this.mem[this.ir.op2]);
         res = ALU.sub(this.reg_8bit[A], this.mem[this.ir.op2]);
         this.reg_8bit[A] = 0x00_00_00_ff & res;
       break;
@@ -162,7 +166,7 @@ public class Processor {
 
       // 14  load (with reg 8 <- reg 8)
       case 14:
-        System.out.println("load");
+        System.out.println("load register "+this.ir.op2+" to register " + this.ir.op1);
         this.reg_8bit[this.ir.op1] = this.reg_8bit[this.ir.op2];
       break;
 
@@ -184,7 +188,7 @@ public class Processor {
 
       // 18  load (with reg 8 <- num 8)
       case 18:
-        System.out.println("load");
+        System.out.println("load "+this.ir.op2+" to register "+this.ir.op1);
         this.reg_8bit[this.ir.op1] = this.ir.op2;
       break;
 
@@ -271,6 +275,7 @@ public class Processor {
 
       // 32  comparation (with reg 8 bits) acc
       case 32:
+        System.out.println("comparar acumulador con "+  this.reg_8bit[this.ir.op2]);
         if (ALU.equal(this.reg_8bit[A], this.reg_8bit[this.ir.op2])) {
           // TODO Banderas
           this.flags[this.carry]=false;
@@ -288,6 +293,7 @@ public class Processor {
 
       // 33  comparation (with num 8 bits) acc
       case 33:
+        System.out.println("comparar acumulador con "+ this.ir.op2);
         if (ALU.equal(this.reg_8bit[A], this.ir.op2)) {
           // TODO Banderas
           this.flags[this.carry]=false;
@@ -305,6 +311,7 @@ public class Processor {
 
       // 34  comparation (with mem 8 bits) acc
       case 34:
+        System.out.println("comparar acumulador con "+ this.mem[this.ir.op2]);
         if (ALU.equal(this.reg_8bit[A], this.mem[this.ir.op2])) {
           // TODO Banderas
           this.flags[this.carry]=false;
@@ -377,6 +384,10 @@ public class Processor {
 
       // 47  jump (is a memory address)
       case 47:
+        System.out.println("Saltar si bandera "+this.ir.op1+" a localidad "+this.ir.op2);
+        if(this.flags[this.ir.op1]){
+          this.reg_16bit[PC]=this.ir.op2;
+        }
         // TODO Verificar Banderas
       break;
 

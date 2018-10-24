@@ -9,6 +9,7 @@ public class Assembler {
   private IR ir;
   private HashMap<String, Integer> reg_8bit;
   private HashMap<String, Integer> reg_16bit;
+  private HashMap<String, Integer> flags;
   private int memPointer;
 
   public Assembler() {
@@ -16,6 +17,7 @@ public class Assembler {
     this.MEMORY_SIZE = (int) Math.pow(2, 16);
     this.reg_8bit = new HashMap();
     this.reg_16bit = new HashMap();
+    this.flags = new HashMap();
     this.reg_8bit.put("A", 0);
     this.reg_8bit.put("B", 1);
     this.reg_8bit.put("C", 2);
@@ -34,6 +36,8 @@ public class Assembler {
     this.reg_16bit.put("SP", 1);
     this.reg_16bit.put("IX", 2);
     this.reg_16bit.put("IY", 3);
+    this.flags.put("C",0);
+    this.flags.put("Z",2);
   }
 
   private int toDec(String address) {
@@ -487,7 +491,10 @@ public class Assembler {
           break;
         case "JP":
           //salto
-          no_op = true;
+          ops = line[2].split(",");
+          this.ir.opcode = 47;
+          this.ir.op1 = this.flags.get(ops[0]); 
+          this.ir.op2 = this.toDec(ops[1]);
           break;
         case "CALL":
           //llamada a subrutina
