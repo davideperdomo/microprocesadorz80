@@ -1,67 +1,92 @@
-class ALU {
+public class ALU {
 
-  public static short suma(short acumulador, short op) {
-    return (short)(acumulador + op);
+  public static int add(int acc, int op) {
+    return acc + op;
   }
 
-  public static short resta(short acumulador, short op) {
-    return (short)(acumulador - op);
+  public static int sub(int acc, int op) {
+    // Deberiamos usar complemento a 2
+    return acc - op;
   }
 
-  public static byte AND(byte acumulador, byte op) {
-    return (byte)(acumulador & op);
+  public static int and(int acc, int op) {
+    return acc & op;
   }
 
-  public static byte OR(byte acumulador, byte op) {
-    return (byte)(acumulador | op);
+  public static int or(int acc, int op) {
+    return acc | op;
   }
 
-  public static byte XOR(byte acumulador, byte op) {
-    return (byte)(acumulador ^ op);
+  public static int xor(int acc, int op) {
+    return acc ^ op;
   }
 
-  public static byte complemento1(byte op) {
-    return (byte)(~op);
+  public static int complement1(int op) {
+    return ~op;
   }
 
   // Es probable un error aqui
-  public static short complemento2(byte op) {
-    return (byte)(~op + 1);
+  public static int complement2(int op) {
+    return ~op + 1;
   }
 
-  public static byte corrimientoIzquierda(byte op) {
-    return (byte)(op << 1);
+  public static int leftRotation8(int op) {
+    int op_filtered = 0x00_00_00_ff & op;
+    boolean lastBit = (1 << 8 & op_filtered) != 0;
+    op_filtered <<= 1;
+    op_filtered |= (lastBit) ? 1 : 0;
+    return op_filtered;
   }
 
-  public static byte corrimientoDerecha(byte op) {
-    return (byte)(op >> 1);
+  public static int rigthRotation8(int op) {
+    int op_filtered = ( 0x00_00_00_ff & op );
+    boolean firstBit = (1 & op_filtered) != 0;
+    op_filtered >>= 1;
+    op_filtered |= (firstBit) ? 1 << 8 : 0;
+    return op_filtered;
   }
 
-  public static boolean menorQue(byte acumulador, byte op) {
-    return acumulador < op;
+  public static int leftRotation16(int op) {
+    int op_filtered = ( 0x00_00_ff_ff & op );
+    boolean lastBit = (1 << 16 & op_filtered) != 0;
+    op_filtered <<= 1;
+    op_filtered |= (lastBit) ? 1 : 0;
+    return op_filtered;
   }
 
-  public static boolean igualQue(byte acumulador, byte op) {
-    return acumulador == op;
+  public static int rigthRotation16(int op) {
+    int op_filtered = ( 0x00_00_ff_ff & op );
+    boolean firstBit = (1 & op_filtered) != 0;
+    op_filtered >>= 1;
+    op_filtered |= (firstBit) ? 1 << 16 : 0;
+    return op_filtered;
   }
 
-  public static boolean mayorQue(byte acumulador, byte op) {
-    return acumulador > op;
+  public static boolean lessThan(int acc, int op) {
+    return acc < op;
   }
 
-  public static byte ponerBit(byte op, int pos) {
-    byte aux = (byte)(0x01 << pos);
-    return (byte)(op | aux);
+  public static boolean equal(int acc, int op) {
+    return acc == op;
   }
 
-  public static byte limpiarBit(byte op, int pos) {
-    byte aux = (byte)(0x01 << pos);
+  public static boolean greaterThan(int acc, int op) {
+    return acc > op;
+  }
+
+  public static int setBit(int op, int pos) {
+    int aux = 1 << pos;
+    return op | aux;
+  }
+
+  public static int resetBit(int op, int pos) {
+    int aux = 1 << pos;
     aux ^= -1;
-    return (byte)(op & aux);
+    return op & aux;
   }
 
-  public static boolean probarBit(byte op, int pos) {
-    byte aux = (byte)(0x01 << pos);
+  public static boolean checkBit(int op, int pos) {
+    int aux = 1 << pos;
     aux &= op;
     return aux != 0;
   }
