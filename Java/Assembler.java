@@ -48,10 +48,11 @@ public class Assembler {
     String[] line = null, ops = null, check = null, check2 = null;
     int address = 0;
     int[] instruction = null, program = new int[MEMORY_SIZE];
+    boolean end = false, no_op = false;
 
-
-    while((input = b.readLine()) != null) {
-
+    while(!end) {
+      no_op = false;
+      input = b.readLine();
       line = input.split(" ");
       switch (line[1]) {
 
@@ -176,7 +177,7 @@ public class Assembler {
           }
           break;
         case "INC":
-        // INC B------------ INC BC ??
+          // INC B------------ INC BC ??
           // Incremento
           // TODO reemplazar valores de otros registros
           // A, B ---- A,32H------ A,(HL) ----------- A, (2080H)
@@ -486,34 +487,47 @@ public class Assembler {
           break;
         case "JP":
           //salto
+          no_op = true;
           break;
         case "CALL":
           //llamada a subrutina
+          no_op = true;
           break;
         case "OUT":
           //Mostrar acumulador por puerto definid
+          this.ir.opcode = 22;
           break;
         case "HALT":
-          break;
-        case "END":
           //Fin de programa
           this.ir.opcode = -1;
           break;
+        case "END":
+          //Fin de ensamblado
+          end = true;
+          break;
         case "ORG":
           //Localidad en memoria de inicio de programa
+          // this.memPointer = this.toDec(line[2]);
+          no_op = true;
           break;
         case "EQU":
           //Definir puerto de entrada
-            break;
+          no_op = true;
+          break;
         default:
-          System.out.println("no opcode found: "+line[1]);
+          System.err.println("no opcode found: " + line[1]);
+          // Terminar programa
+          System.exit(0);
+          no_op = true;
       }
-      instruction = ir.encodeInstruction();
-      program[this.memPointer++] = instruction[0];
-      program[this.memPointer++] = instruction[1];
-      program[this.memPointer++] = instruction[2];
-      program[this.memPointer++] = instruction[3];
-      program[this.memPointer++] = instruction[4];
+      if (!end && !no_op) {
+        instruction = ir.encodeInstruction();
+        program[this.memPointer++] = instruction[0];
+        program[this.memPointer++] = instruction[1];
+        program[this.memPointer++] = instruction[2];
+        program[this.memPointer++] = instruction[3];
+        program[this.memPointer++] = instruction[4];
+      }
     }
     b.close();
     return program;

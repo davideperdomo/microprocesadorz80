@@ -50,7 +50,6 @@ public class Processor {
       this.fetch();
       this.execute();
     }
-    System.out.println(Integer.toBinaryString(0x00_00_00_ff & this.reg_8bit[A]));
   }
 
   public void fetch() {
@@ -74,26 +73,30 @@ public class Processor {
 
   public void execute() {
     int res = 0;
+    String output = null;
     switch (this.ir.opcode) {
       case -1:
+        System.out.println("halt");
         this.end = true;
         System.out.println("Fin del programa");
       break;
       // add (with reg 8 bits) accum->op1
       case 0:
+        System.out.println("suma");
         res = ALU.add(this.reg_8bit[A], this.reg_8bit[this.ir.op2]);
         this.reg_8bit[A] = 0x00_00_00_ff & res;
       break;
 
       // add (with num 8 bits) accum
       case 1:
-        System.out.print("Suma");
+        System.out.println("suma");
         res = ALU.add(this.reg_8bit[A], this.ir.op2);
         this.reg_8bit[A] = 0x00_00_00_ff & res;
       break;
 
       // add (with mem 8 bits) accum
       case 2:
+        System.out.println("suma");
         res = ALU.add(this.reg_8bit[A], this.mem[this.ir.op2]);
         this.reg_8bit[A] = 0x00_00_00_ff & res;
       break;
@@ -159,11 +162,13 @@ public class Processor {
 
       // 14  load (with reg 8 <- reg 8)
       case 14:
+        System.out.println("load");
         this.reg_8bit[this.ir.op1] = this.reg_8bit[this.ir.op2];
       break;
 
       // 15  load (with reg 16 <- reg 16)
       case 15:
+        System.out.println("load");
         this.reg_16bit[this.ir.op1] = this.reg_16bit[this.ir.op2];
       break;
 
@@ -179,6 +184,7 @@ public class Processor {
 
       // 18  load (with reg 8 <- num 8)
       case 18:
+        System.out.println("load");
         this.reg_8bit[this.ir.op1] = this.ir.op2;
       break;
 
@@ -194,10 +200,19 @@ public class Processor {
 
       // 21  Input (only acc)
       case 21:
+
       break;
 
       // 22  Output (only acc)
       case 22:
+        System.out.println("out");
+        output = Integer.toBinaryString(0x00_00_00_ff & this.reg_8bit[A]);
+        if (output.length() < 8) {
+          for (int i = 0; i < 8 - output.length(); i++) {
+            System.out.print("0");
+          }
+        }
+        System.out.println(output);
       break;
 
       // 23  AND (with reg 8 bits) acc
