@@ -6,11 +6,13 @@ import java.io.IOException;
 class UI {
   public void init() throws FileNotFoundException, IOException{
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    System.out.println("MICROPROCESADOR Z80");
-    System.out.println("Cargar programa: ");
+    System.out.println("-- Z80 PROCESSOR EMULATOR --");
+    System.out.println("Load program: ");
     String archivo = br.readLine();
-    System.out.println(archivo);
-    //ensamblar(archivo);
+    Assembler a = new Assembler();
+    //"programs/fibo.txt"
+    Processor z80 = new Processor(a.assemble(archivo));
+    z80.runProgram();
     br.close();
   }
 }

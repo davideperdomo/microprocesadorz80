@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 public class Processor {
   // 8 bits
   private final int A = 0, B = 1, C = 2, D = 3, E = 4, H = 5, L = 6;
@@ -28,7 +30,9 @@ public class Processor {
   // Instruction register
   private IR ir;
   private boolean end;
-
+  
+  //Pins
+  private Chip chip;
 
   public Processor(int[] mem) {
     this.end = false;
@@ -43,9 +47,10 @@ public class Processor {
     for (int i = 0; i < 4; i++) {
       reg_16bit[i] = 0;
     }
+    this.chip = new Chip();
   }
 
-  public void runProgram() {
+  public void runProgram() throws IOException {
     while(!this.end) {
       this.fetch();
       this.execute();
@@ -71,7 +76,7 @@ public class Processor {
 
   }
 
-  public void execute() {
+  public void execute() throws IOException{
     int res = 0;
     String output = null;
     switch (this.ir.opcode) {
@@ -215,12 +220,14 @@ public class Processor {
 
       // 21  Input (only acc)
       case 21:
+        System.out.println("input");
+        this.reg_8bit[A] = this.chip.getDatabus();
 
       break;
 
       // 22  Output (only acc)
       case 22:
-        System.out.println("out");
+        System.out.println("output");
         output = Integer.toBinaryString(this.reg_8bit[A]);
         System.out.print("Bin: ");
         if (output.length() < 8) {
@@ -230,7 +237,8 @@ public class Processor {
         } else {
           output = output.substring(0,8);
         }
-       System.out.print(output + ", Dec: " + this.reg_8bit[A] + "\n");
+        this.chip.setDatabus(this.reg_8bit[A]);
+        System.out.print(output + ", Dec: " + this.reg_8bit[A] + "\n");
       break;
 
       // 23  AND (with reg 8 bits) acc
