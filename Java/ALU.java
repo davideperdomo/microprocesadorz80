@@ -5,7 +5,6 @@ public class ALU {
   }
 
   public static int sub(int acc, int op) {
-    // Deberiamos usar complemento a 2
     return acc - op;
   }
 

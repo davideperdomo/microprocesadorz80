@@ -1,0 +1,31 @@
+ORG 2048H
+# Cargar valores B, C
+# contador
+LD B,00H
+# limite num - 2
+LD C,07H
+# reg aux
+LD D,00H
+LD E,01H
+LD H,00H
+# while (B < C) { H = D + E; OUT H; D = E; E = H; }
+LOOP LD A,B
+SUB C
+JP C,ENDWHILE
+JP Z,ENDWHILE
+# body del while { d = d + 2; out d }
+LD A,D
+ADD A,E
+LD H,A
+OUT (PORT1),A
+LD D,E
+LD E,H
+# Update
+LD A,B
+ADD A,01H
+LD B,A
+JP LOOP
+ENDWHILE LD A,H
+OUT (PORT1),A
+HALT
+END

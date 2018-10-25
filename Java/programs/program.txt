@@ -1,0 +1,10 @@
+# Hola soy un comentario
+ORG 0500H
+PORT1 EQU 01H
+START LD B,32H
+LD C,A2H
+LD A,C
+ADD A,B
+OUT (PORT1),A
+HALT
+END

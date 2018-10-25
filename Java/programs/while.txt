@@ -1,0 +1,24 @@
+ORG 2048H
+# Cargar valores B, C
+LD B,00H
+LD C,05H
+LD D,00H
+# while (B < C) { d = d + 1; out d }
+LOOP LD A,B
+SUB C
+JP C,ENDWHILE
+JP Z,ENDWHILE
+# body del while { d = d + 2; out d }
+LD A,D
+ADD A,02H
+LD D,A
+OUT (PORT1),A
+# Update
+LD A,B
+ADD A,01H
+LD B,A
+JP LOOP
+ENDWHILE LD A,D
+OUT (PORT1),A
+HALT
+END

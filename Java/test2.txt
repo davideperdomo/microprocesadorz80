@@ -1,8 +1,0 @@
- ORG 1800H
- LDD B,(01H)
- LD A,B
- LD C,(02H)
- ADD A,C
- LD B,(03H)
- HALT
- END

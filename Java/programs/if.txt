@@ -1,0 +1,15 @@
+ORG 2048H
+# Cargar valores B, C (80, 112)
+LD B,50H
+LD C,70H
+# if (B >= C) { out C - B (32) }
+IF LD A,C
+SUB B
+JP C,ELSE
+JP ENDIF
+# body del else { out C + B (192) }
+ELSE LD A,C
+ADD A,B
+ENDIF OUT (PORT1),A
+HALT
+END
