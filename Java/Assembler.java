@@ -75,7 +75,7 @@ public class Assembler {
     FileReader f = new FileReader(file);
     BufferedReader b = new BufferedReader(f);
     String[] line = null;
-    int auxPointer = -5;
+    int auxPointer = 0;
     while ((input = b.readLine()) != null) {
       if (input.charAt(0) == '#') continue;
       line = input.split(" ");
@@ -613,10 +613,11 @@ public class Assembler {
     b.close();
     return program;
   }
+
 }
 
 //  opcode      op 1              op 2
-//  00000000 | 00000000 00000000| 00000000 00000000
+//  00000000 | 00000000 00000000 | 00000000 00000000
 
 /*
 0  add (with reg 8 bits) accum
