@@ -351,8 +351,239 @@ public class Assembler {
             }
           }
           break;
+// -----------------------------------------------------------------------------
+        case "OUT":
+          //Mostrar acumulador por puerto definid
+          this.ir.opcode = 33;
+          break;
 
+        case "AND":
+          this.ir.op1 = this.reg_8bit.get("A");
+          // Reg 8 bit
+          if (this.reg_8bit.containsKey(params[0])) {
+            this.ir.opcode = 34;
+            this.ir.op2 = this.reg_8bit.get(params[0]);
+          // Mem
+          } else if (params[0].contains("(")) {
+            // Mem ind
+            if (params[0].length() == 4) {
+              this.ir.opcode = 35;
+              this.ir.op2 = this.reg_8bit.get(params[0].substring(0,1));
+              this.ir.op2 <<= 8;
+              this.ir.op2 |= this.reg_8bit.get(params[0].substring(1,2));
+            // Mem dir
+            } else {
+              this.ir.opcode = 36;
+              this.ir.op2 = this.toDec(params[0].substring(1,5));
+            }
 
+          // Num
+          } else {
+            this.ir.opcode = 37;
+            this.ir.op2 = this.toDec(params[0].substring(0,2));
+          }
+          break;
+
+        case "OR":
+          this.ir.op1 = this.reg_8bit.get("A");
+          // Reg 8 bit
+          if (this.reg_8bit.containsKey(params[0])) {
+            this.ir.opcode = 38;
+            this.ir.op2 = this.reg_8bit.get(params[0]);
+          // Mem
+          } else if (params[0].contains("(")) {
+            // Mem ind
+            if (params[0].length() == 4) {
+              this.ir.opcode = 39;
+              this.ir.op2 = this.reg_8bit.get(params[0].substring(0,1));
+              this.ir.op2 <<= 8;
+              this.ir.op2 |= this.reg_8bit.get(params[0].substring(1,2));
+            // Mem dir
+            } else {
+              this.ir.opcode = 40;
+              this.ir.op2 = this.toDec(params[0].substring(1,5));
+            }
+
+          // Num
+          } else {
+            this.ir.opcode = 41;
+            this.ir.op2 = this.toDec(params[0].substring(0,2));
+          }
+          break
+
+        case "XOR":
+          this.ir.op1 = this.reg_8bit.get("A");
+          // Reg 8 bit
+          if (this.reg_8bit.containsKey(params[0])) {
+            this.ir.opcode = 42;
+            this.ir.op2 = this.reg_8bit.get(params[0]);
+          // Mem
+          } else if (params[0].contains("(")) {
+            // Mem ind
+            if (params[0].length() == 4) {
+              this.ir.opcode = 43;
+              this.ir.op2 = this.reg_8bit.get(params[0].substring(0,1));
+              this.ir.op2 <<= 8;
+              this.ir.op2 |= this.reg_8bit.get(params[0].substring(1,2));
+            // Mem dir
+            } else {
+              this.ir.opcode = 44;
+              this.ir.op2 = this.toDec(params[0].substring(1,5));
+            }
+
+          // Num
+          } else {
+            this.ir.opcode = 45;
+            this.ir.op2 = this.toDec(params[0].substring(0,2));
+          }
+          break;
+
+        case "CP":
+          this.ir.op1 = this.reg_8bit.get("A");
+          // Reg 8 bit
+          if (this.reg_8bit.containsKey(params[0])) {
+            this.ir.opcode = 46;
+            this.ir.op2 = this.reg_8bit.get(params[0]);
+          // Mem
+          } else if (params[0].contains("(")) {
+            // Mem ind
+            if (params[0].length() == 4) {
+              this.ir.opcode = 47;
+              this.ir.op2 = this.reg_8bit.get(params[0].substring(0,1));
+              this.ir.op2 <<= 8;
+              this.ir.op2 |= this.reg_8bit.get(params[0].substring(1,2));
+            // Mem dir
+            } else {
+              this.ir.opcode = 48;
+              this.ir.op2 = this.toDec(params[0].substring(1,5));
+            }
+
+          // Num
+          } else {
+            this.ir.opcode = 49;
+            this.ir.op2 = this.toDec(params[0].substring(0,2));
+          }
+          break;
+
+        case "RR":
+          // Reg 8 bit
+          if (this.reg_8bit.containsKey(params[0])) {
+            this.ir.opcode = 50;
+            this.ir.op2 = this.reg_8bit.get(params[0]);
+          // Reg 16 bit
+          } else if (this.reg_16bit.containsKey(params[0])) {
+            this.ir.opcode = 51;
+            this.ir.op2 = this.reg_16bit.get(params[0]);
+          // Mem
+          } else {
+            // Mem ind
+            if (params[0].length() == 4) {
+              this.ir.opcode = 52;
+              this.ir.op2 = this.reg_8bit.get(params[0].substring(0,1));
+              this.ir.op2 <<= 8;
+              this.ir.op2 |= this.reg_8bit.get(params[0].substring(1,2));
+            // Mem dir
+            } else {
+              this.ir.opcode = 53;
+              this.ir.op2 = this.toDec(params[0].substring(1,5));
+            }
+          }
+          break;
+
+        case "RL":
+          // Reg 8 bit
+          if (this.reg_8bit.containsKey(params[0])) {
+            this.ir.opcode = 54;
+            this.ir.op2 = this.reg_8bit.get(params[0]);
+          // Reg 16 bit
+          } else if (this.reg_16bit.containsKey(params[0])) {
+            this.ir.opcode = 55;
+            this.ir.op2 = this.reg_16bit.get(params[0]);
+          // Mem
+          } else {
+            // Mem ind
+            if (params[0].length() == 4) {
+              this.ir.opcode = 56;
+              this.ir.op2 = this.reg_8bit.get(params[0].substring(0,1));
+              this.ir.op2 <<= 8;
+              this.ir.op2 |= this.reg_8bit.get(params[0].substring(1,2));
+            // Mem dir
+            } else {
+              this.ir.opcode = 57;
+              this.ir.op2 = this.toDec(params[0].substring(1,5));
+            }
+          }
+          break;
+
+        case "BIT":
+          this.ir.op1 = this.toDec(params[0]);
+          // Reg 8 bit
+          if (this.reg_8bit.containsKey(params[1])) {
+            this.ir.opcode = 58;
+            this.ir.op2 = this.reg_8bit.get(params[1]);
+          // Mem
+          } else {
+            // Mem ind
+            if (params[1].length() == 4) {
+              this.ir.opcode = 59;
+              this.ir.op2 = this.reg_8bit.get(params[1].substring(0,1));
+              this.ir.op2 <<= 8;
+              this.ir.op2 |= this.reg_8bit.get(params[1].substring(1,2));
+            // Mem dir
+            } else {
+              this.ir.opcode = 60;
+              this.ir.op2 = this.toDec(params[1].substring(1,5));
+            }
+          }
+          break;
+
+        case "SET":
+          this.ir.op1 = this.toDec(params[0]);
+          // Reg 8 bit
+          if (this.reg_8bit.containsKey(params[1])) {
+            this.ir.opcode = 61;
+            this.ir.op2 = this.reg_8bit.get(params[1]);
+          // Mem
+          } else {
+            // Mem ind
+            if (params[1].length() == 4) {
+              this.ir.opcode = 62;
+              this.ir.op2 = this.reg_8bit.get(params[1].substring(0,1));
+              this.ir.op2 <<= 8;
+              this.ir.op2 |= this.reg_8bit.get(params[1].substring(1,2));
+            // Mem dir
+            } else {
+              this.ir.opcode = 63;
+              this.ir.op2 = this.toDec(params[1].substring(1,5));
+            }
+          }
+          break;
+
+        case "RESET":
+          this.ir.op1 = this.toDec(params[0]);
+          // Reg 8 bit
+          if (this.reg_8bit.containsKey(params[1])) {
+            this.ir.opcode = 64;
+            this.ir.op2 = this.reg_8bit.get(params[1]);
+          // Mem
+          } else {
+            // Mem ind
+            if (params[1].length() == 4) {
+              this.ir.opcode = 65;
+              this.ir.op2 = this.reg_8bit.get(params[1].substring(0,1));
+              this.ir.op2 <<= 8;
+              this.ir.op2 |= this.reg_8bit.get(params[1].substring(1,2));
+            // Mem dir
+            } else {
+              this.ir.opcode = 66;
+              this.ir.op2 = this.toDec(params[1].substring(1,5));
+            }
+          }
+          break;
+
+        case "JP":
+
+          break;
       }
     }
   }
@@ -395,6 +626,8 @@ public class Assembler {
 
 
 32  Input (only acc)
+
+
 33  Output (only acc)
 34  AND (with reg 8 bits) acc
 35  AND (with mem ind  8 bits) acc
@@ -409,9 +642,9 @@ public class Assembler {
 44  XOR (with mem dir bits) acc
 45  XOR (with num 8 bits) acc
 46  comparation (with reg 8 bits) acc
-47  comparation (with num 8 bits) acc
-48  comparation (with mem ind 8 bits) acc
-49  comparation (with mem dir 8 bits) acc
+47  comparation (with mem ind 8 bits) acc
+48  comparation (with mem dir 8 bits) acc
+49  comparation (with num 8 bits) acc
 50  rigthRotation (with reg 8 bits)
 51  rigthRotation (with reg 16 bits)
 52  rigthRotation (with mem ind 8 bits)
@@ -429,7 +662,10 @@ public class Assembler {
 64  resetBit (with reg 8 bits)
 65  resetBit (with mem ind 8 bits)
 66  resetBit (with mem dir 8 bits)
+
 67  jump C (acc > 0)
 68  jump Z (acc == 0)
 69  jump (is a memory address)
+
+// TODO etiquta org call equ
 */
