@@ -4,7 +4,7 @@ public class IR {
   public int op1;
   public int op2;
 
-  private void clear() {
+  public void clear() {
     this.op1 = 0;
     this.op2 = 0;
     this.opcode = 0;
@@ -29,5 +29,17 @@ public class IR {
     instruction[3] = (0x00_00_ff_00 & this.op2) >> 8;
     instruction[4] = (0x00_00_00_ff & this.op2);
     return instruction;
+  }
+
+  public long encodeToLong() {
+    long result = 0, aux = 0;
+    result = this.opcode;
+    result <<= 32;
+    aux = this.op1;
+    aux <<= 16;
+    result |= aux;
+    aux = this.op2;
+    result |= aux;
+    return result;
   }
 }

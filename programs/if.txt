@@ -1,15 +1,17 @@
-ORG 2048H
+ORG 0001H
 # Cargar valores B, C (80, 112)
-LD B,50H
-LD C,70H
+LD (FFFAH),50H
+LD (FFFBH),70H
+#LD B,50H
+#LD C,70H
 # if (B >= C) { out C - B (32) }
-IF LD A,C
-SUB B
+IF LD A,(FFFBH)
+SUB (FFFAH)
 JP C,ELSE
 JP ENDIF
 # body del else { out C + B (192) }
-ELSE LD A,C
-ADD A,B
+ELSE LD A,(FFFBH)
+ADD A,(FFFAH)
 ENDIF OUT (PORT1),A
 HALT
 END

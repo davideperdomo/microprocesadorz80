@@ -2,9 +2,8 @@ import java.io.*;
 
 public class LinkerLoader {
 
-  private int program;
   private int org;
-
+  private final int ORG = 80;
 
   /*
     long = 00000000|00000000|00000000|00000000|00000000(*)
@@ -34,18 +33,42 @@ public class LinkerLoader {
 
   public int[] decodeLine(String line) {
     long inst = Long.parseLong(line.substring(0, line.length() - 1), 2);
-    long opcode = inst & 0x00_00_00_ff_00_00_00_00 >> 32;
-    if (opcode == 50) {
-      this.org = op2;
+    long opcode = (inst & 0x00_00_00_ff_00_00_00_00L) >> 32;
+    long op1 = (inst & 0x00_00_00_00_ff_ff_00_00L) >> 16;
+    long op2 = (inst & 0x00_00_00_00_00_00_ff_ffL);
+    IR ir = new IR();
+    if (opcode == this.ORG) {
+      this.org = (int) op2;
     }
 
     if (line.charAt(line.length() - 1) == '*') {
-      inst += this.org;  // Posible suma > 65535
+      if (opcode >= 30 && opcode <= 33) {
+        op1 += this.org;
+        if (opcode == 32) {
+          op2 += this.org;
+        }
+      } else {
+        op2 += this.org;  // Posible suma > 65535
+      }
+
+      System.out.println(op1);
+      System.out.println(op2);
+      System.out.println(this.org);
+      if (op1 > 65535 || op2 > 65535) {
+        System.err.println("Limit Exceed");
+        System.exit(0);
+      } else {
+        ir.opcode = (int) opcode;
+        ir.op1 = (int) op1;
+        ir.op2 = (int) op2;
+        inst = ir.encodeToLong();
+      }
     }
+
     int[] result = new int[5];
     long filter = 0x00_00_00_00_00_00_00_ff;
     for (int i = 4; i >= 0; i--) {
-      result[i] = (int) inst & filter >> 8*(i%4);
+      result[i] = (int) (inst & filter >> 8*(i%4));
       filter <<= 8;
     }
     return result;
@@ -56,11 +79,11 @@ public class LinkerLoader {
     IR ir = new IR();
     ir.decodeInstruction(instruction);
     String aux = null;
-    aux = String.format("%8s", Integer.toBinaryString(ir.opcode).replace(' ', '0');
+    aux = String.format("%8s", Integer.toBinaryString(ir.opcode)).replace(' ', '0');
     sb.append(aux);
-    aux = String.format("%16s", Integer.toBinaryString(ir.op1).replace(' ', '0');
+    aux = String.format("%16s", Integer.toBinaryString(ir.op1)).replace(' ', '0');
     sb.append(aux);
-    aux = String.format("%16s", Integer.toBinaryString(ir.op2).replace(' ', '0');
+    aux = String.format("%16s", Integer.toBinaryString(ir.op2)).replace(' ', '0');
     sb.append(aux);
     return sb.toString();
   }

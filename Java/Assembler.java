@@ -540,13 +540,13 @@ public class Assembler {
             this.ir.op2 = this.reg_8bit.get(ops[1]);
           }
           break;
-        case "CALL":
-          //llamada a subrutina
-          no_op = true;
-          break;
         case "OUT":
           //Mostrar acumulador por puerto definid
           this.ir.opcode = 22;
+          break;
+        case "CALL":
+          //llamada a subrutina
+          no_op = true;
           break;
         case "HALT":
           //Fin de programa

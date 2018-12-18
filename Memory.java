@@ -1,6 +1,6 @@
 public class Memory {
 
-  private int M;
+  private int[] M;
   private final int SIZE = 65535;
 
   public Memory() {
