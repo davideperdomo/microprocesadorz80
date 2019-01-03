@@ -71,14 +71,14 @@ public class Processor {
   public void setFlags(int flag, boolean val){
       this.flags[flag]=val;
       this.ui.printLabelFlag(flag,val);
-      System.out.println("flaging");
   }
   public void runProgram() throws IOException, InterruptedException {
     int i=0;
+    
     while(!this.end) {
       this.fetch();
-      this.execute(); ;
-      Thread.sleep(200);
+      this.execute();
+      Thread.sleep(10);
       i++;
     }
   }
@@ -91,7 +91,7 @@ public class Processor {
     instruction[3] = this.mem.get(this.reg_16bit[PC]+3);
     instruction[4] = this.mem.get(this.reg_16bit[PC]+4);
     this.ir.decodeInstruction(instruction);
-    this.setReg_16bit(PC,reg_16bit[PC]+=5);
+    this.setReg_16bit(PC, this.reg_16bit[PC]+5);
     //this.reg_16bit[PC] += 5;
   }
 
@@ -113,24 +113,23 @@ public class Processor {
     this.ui.printLabel(String.valueOf(this.ir.opcode));
     this.ui.printLabelOp(String.valueOf(this.ir.op1));
     this.ui.printLabelOp2(String.valueOf(this.ir.op2));
-    System.out.print(this.ir.opcode + "" );
+//    System.out.print(this.ir.opcode + " " );
 
     switch (this.ir.opcode) {
       // add (with reg 8 bits) accum->op1
       case 0:
-        System.out.println("suma");
+        System.out.println("suma " + this.ir.op2 + " - " + this.ir.op2);
         res = ALU.add(this.reg_8bit[A], this.reg_8bit[this.ir.op2]);
-        this.reg_8bit[A] = res;
+        this.setReg_8bit(A,res);
         break;
 
       // add (with mem ind) accum
       case 1:
-        System.out.println("suma");
+        System.out.println("suma" + this.ir.op1 + " - " +this.ir.op2);
         addr = this.reg_8bit[this.ir.op1] << 8;
         addr |= this.reg_8bit[this.ir.op2];
         res = ALU.add(this.reg_8bit[A], this.mem.get(addr));
         this.setReg_8bit(A,res);
-        //this.reg_8bit[A] = res;
         break;
 
       // add (with mem dir) accum
@@ -138,7 +137,6 @@ public class Processor {
         System.out.println("suma");
         res = ALU.add(this.reg_8bit[A], this.mem.get(this.ir.op2));
         this.setReg_8bit(A,res);
-        //this.reg_8bit[A] = res;
         break;
 
       //add (with num 8 bits) accum
@@ -634,7 +632,8 @@ public class Processor {
           // Avanzar PC
           addr = this.reg_8bit[this.ir.op1] << 8;
           addr |= this.reg_8bit[this.ir.op2];
-          this.reg_16bit[PC] = addr;
+//          this.reg_16bit[PC] = addr;
+          this.setReg_16bit(PC, addr);
         }
         break;
 
@@ -643,7 +642,8 @@ public class Processor {
         System.out.println("jump pos");
         if (this.reg_8bit[A] > 0){
           // Avanzar PC
-          this.reg_16bit[PC] = this.ir.op2;
+//          this.reg_16bit[PC] = this.ir.op2;
+          this.setReg_16bit(PC, this.ir.op2);
         }
         break;
 
@@ -654,7 +654,8 @@ public class Processor {
           // Avanzar PC
           addr = this.reg_8bit[this.ir.op1] << 8;
           addr |= this.reg_8bit[this.ir.op2];
-          this.reg_16bit[PC] = addr;
+//          this.reg_16bit[PC] = addr;
+          this.setReg_16bit(PC, addr);
         }
         break;
 
@@ -663,7 +664,8 @@ public class Processor {
         System.out.println("jump zero");
         if (this.reg_8bit[A] == 0){
           // Avanzar PC
-          this.reg_16bit[PC] = this.ir.op2;
+//          this.reg_16bit[PC] = this.ir.op2;
+          this.setReg_16bit(PC, this.ir.op2);
         }
         break;
 
@@ -672,13 +674,15 @@ public class Processor {
         System.out.println("jump");
         addr = this.reg_8bit[this.ir.op1] << 8;
         addr |= this.reg_8bit[this.ir.op2];
-        this.reg_16bit[PC] = addr;
+        this.setReg_16bit(PC, addr);
+//        this.reg_16bit[PC] = addr;
         break;
 
       // jump label
       case 74:
         // Avanzar PC
-        this.reg_16bit[PC] = this.ir.op2;
+        this.setReg_16bit(PC, this.ir.op2);
+//        this.reg_16bit[PC] = this.ir.op2;
         break;
 
       case 75:
@@ -693,7 +697,8 @@ public class Processor {
 
       case 77:
         System.out.println("org");
-        this.reg_16bit[PC] = this.ir.op2;
+//        this.reg_16bit[PC] = this.ir.op2;
+        this.setReg_16bit(PC, this.ir.op2);
         break;
 
       case 78:

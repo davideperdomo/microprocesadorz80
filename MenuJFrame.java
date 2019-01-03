@@ -147,6 +147,8 @@ public class MenuJFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jTextField1.setText("programs/");
+
         jLabel1.setText("Nombre del archivo");
 
         jButton1.setText("Ensamblar y ejecutar");

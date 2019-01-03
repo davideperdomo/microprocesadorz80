@@ -80,7 +80,10 @@ public class Assembler {
       if (line.length == 3 || !this.opcodes.contains(line[0])) {
         this.labels.put(line[0], auxPointer);
       }
-      auxPointer+=5;
+      
+      if (!line[0].equalsIgnoreCase("ORG")){
+         auxPointer+=5;
+      }
     }
     b.close();
   }
@@ -98,7 +101,7 @@ public class Assembler {
     while((line = b.readLine()) != null) {
       relocate = false;
       if (line.charAt(0) == '#') continue;
-      System.out.println(line);
+      // System.out.println(line);
       aux = line.split(" ");
       params = null;
       label = null;
@@ -108,7 +111,6 @@ public class Assembler {
         label = aux[0];
         opcode = aux[1];
         params = aux[2].split(",");
-        relocate = true;
       } else if (aux.length == 2) {
         // label opcode
         if (!this.opcodes.contains(aux[0])) {
@@ -251,6 +253,7 @@ public class Assembler {
 
             // desde reg
             if (this.reg_8bit.containsKey(params[1])) {
+              
               this.ir.opcode = 18;
               this.ir.op2 = this.reg_8bit.get(params[1]);
 
@@ -308,9 +311,9 @@ public class Assembler {
           } else {
             // memoria indirecto
             if (params[0].length() == 4) {
-              this.ir.op1 = this.reg_8bit.get(params[0].substring(0,1));
+              this.ir.op1 = this.reg_8bit.get(params[0].substring(1,2));
               this.ir.op1 <<= 8;
-              this.ir.op1 |= this.reg_8bit.get(params[0].substring(1,2));
+              this.ir.op1 |= this.reg_8bit.get(params[0].substring(2,3));
 
               // desde registro
               if (this.reg_8bit.containsKey(params[1])) {

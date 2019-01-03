@@ -5,8 +5,8 @@ import java.io.*;
 public class LinkerLoader {
 
   private int org;
-  private final int ORG = 80;
-
+  private final int ORG = 77;
+  private boolean inc = false;
   /*
     long = 00000000|00000000|00000000|00000000|00000000(*)
     Leer org = 50
@@ -20,14 +20,32 @@ public class LinkerLoader {
     PrintWriter outfile = new PrintWriter("programBinary.txt", "UTF-8");
     String line = null;
     int[] instruction = null;
-    int addr = 0;
+    int addr = 0, lines = 0;
     while ((line = b.readLine()) != null) {
+//      System.out.println(lines +". " +line);
       instruction = this.decodeLine(line);
-      outfile.println(this.binaryInstruction(instruction));
+      lines++;
+      outfile.println((this.org + addr) + "\t" + this.binaryInstruction(instruction));
       for (int i = 0; i < 5; i++) {
-        m.set(this.org + addr++, instruction[i]);
+        if (this.inc) {
+            m.set(i, instruction[i]);
+        } else {
+            m.set(this.org + addr++, instruction[i]);
+        }    
       }
+      
+      if (this.inc) {
+          this.inc = false;
+      }
+
     }
+//    System.out.println("\n\nsadadsain[3]: " + m.get(3) + " in[4]: " + m.get(4));
+//    System.out.println("\n\n\nLines = " + lines);
+//    System.out.println("\n\n\nORG = " + this.org);
+    /*
+    for (int i = this.org-5; i < this.org+lines*5+5; i++) {
+      System.out.println(m.get(i));
+    }*/
     b.close();
     outfile.close();
   }
@@ -38,9 +56,11 @@ public class LinkerLoader {
     long opcode = (inst & 0x00_00_00_ff_00_00_00_00L) >> 32;
     long op1 = (inst & 0x00_00_00_00_ff_ff_00_00L) >> 16;
     long op2 = (inst & 0x00_00_00_00_00_00_ff_ffL);
+//    System.out.println("op "+opcode+" o1 "+op1+" o2 "+op2);
     IR ir = new IR();
     if (opcode == this.ORG) {
       this.org = (int) op2;
+      this.inc = true;
     }
 
     if (line.charAt(line.length() - 1) == '*') {
@@ -53,9 +73,6 @@ public class LinkerLoader {
         op2 += this.org;  // Posible suma > 65535
       }
 
-      System.out.println(op1);
-      System.out.println(op2);
-      System.out.println(this.org);
       if (op1 > 65535 || op2 > 65535) {
         System.err.println("Limit Exceed");
         System.exit(0);
@@ -67,12 +84,16 @@ public class LinkerLoader {
       }
     }
 
+//    System.out.println(Long.toBinaryString(inst));
+
     int[] result = new int[5];
     long filter = 0x00_00_00_00_00_00_00_ff;
     for (int i = 4; i >= 0; i--) {
-      result[i] = (int) (inst & filter >> 8*(i%4));
+      result[i] = (int) ((inst & filter) >> 8*(4-i));
       filter <<= 8;
     }
+
+    //System.out.println("op" + result[0]);
     return result;
   }
 

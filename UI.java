@@ -15,11 +15,16 @@ class UI {
     //this.f=new GUIJFrame();
     f.setVisible(true);
     Memory mem = new Memory();
-    Assembler a = new Assembler();    
+    Assembler a = new Assembler();
+    a.assemble(file);
     LinkerLoader l = new LinkerLoader();
-    l.chargeProgram("relocatableCode.txt",mem);
-    Processor z80 = new Processor(mem,this);
+    l.chargeProgram("relocatableCode.txt", mem);
+    Processor z80 = new Processor(mem, this);
     z80.runProgram();
+    
+    for (int i = 0; i < 20; i++) {
+        System.out.println("addr: " + i + "; MEM: " + mem.get(i));            
+    }
   }
   public void printLabel(String s){
       f.print(s);
@@ -34,7 +39,7 @@ class UI {
       f.printreg(reg, msg);
   }
   public void printLabel16Reg(int reg, String msg){
-      f.printreg(reg,msg);
+      f.print16reg(reg,msg);
   }
   public void printLabelMem(int pos,String val){
       f.printmem(String.valueOf(pos),val);
@@ -43,7 +48,6 @@ class UI {
       f.printflag(flag,val);
   }
   public void printOutput(String msg){
-      //System.out.println("poutputting");
       f.printoutput(msg);
   }
 }
